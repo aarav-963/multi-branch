@@ -1,3 +1,4 @@
+```groovy
 pipeline {
 
     agent {
@@ -16,16 +17,35 @@ pipeline {
             }
         }
 
-        stage('Process QA Files') {
+        stage('Build Docker Image') {
             steps {
-                echo "Processing files on QA machine"
+                echo "Building Docker image..."
 
                 sh '''
-                    echo "Current branch:"
-                    git branch --show-current
+                    docker build -t qa-apache:latest .
+                '''
+            }
+        }
 
-                    echo "Files:"
-                    ls -la
+        stage('Create Container') {
+            steps {
+                echo "Creating Docker container..."
+
+                sh '''
+                    docker rm -f c1 2>/dev/null || true
+                    docker run -d --name c1 -p 80:80 qa-apache:latest
+                '''
+            }
+        }
+
+        stage('Verify Container') {
+            steps {
+                sh '''
+                    echo "Running containers:"
+                    docker ps
+
+                    echo "Container details:"
+                    docker inspect c1
                 '''
             }
         }
@@ -41,3 +61,4 @@ pipeline {
         }
     }
 }
+```
