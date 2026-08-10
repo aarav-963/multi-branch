@@ -22,7 +22,7 @@ pipeline {
                 echo "Building Docker image..."
 
                 sh '''
-                    docker build -t qa-apache:latest .
+                    sudo docker build -t qa-apache:latest .
                 '''
             }
         }
@@ -32,8 +32,8 @@ pipeline {
                 echo "Creating Docker container..."
 
                 sh '''
-                    docker rm -f c1 2>/dev/null || true
-                    docker run -d --name c1 -p 80:80 qa-apache:latest
+                    sudo docker rm -f c1 2>/dev/null || true
+                    sudo docker run -d --name c1 -p 80:80 qa-apache:latest
                 '''
             }
         }
@@ -42,10 +42,10 @@ pipeline {
             steps {
                 sh '''
                     echo "Running containers:"
-                    docker ps
+                    sudo docker ps
 
                     echo "Container details:"
-                    docker inspect c1
+                    sudo docker inspect c1
                 '''
             }
         }
