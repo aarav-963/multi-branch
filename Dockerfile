@@ -7,7 +7,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Copy index.html from Jenkins workspace
-COPY /home/ubuntu/jenkins/workspace/job_qa/index.html /var/www/html/index.html
+COPY index.html /var/www/html/index.html
 
 # Expose Apache port
 EXPOSE 80
