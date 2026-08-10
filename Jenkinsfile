@@ -1,14 +1,14 @@
 pipeline {
 
     agent {
-        label 'qa'
+        label 'prod'
     }
 
     stages {
 
         stage('Checkout') {
             steps {
-                echo "Running QA Pipeline"
+                echo "Running PROD Pipeline"
                 echo "Branch: ${BRANCH_NAME}"
                 echo "Node: ${NODE_NAME}"
 
@@ -18,21 +18,21 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                echo "Building Docker image..."
+                echo "Building PROD Docker image..."
 
                 sh '''
-                    docker build -t qa-apache:latest .
+                    docker build -t prod-apache:latest .
                 '''
             }
         }
 
         stage('Create Container') {
             steps {
-                echo "Creating Docker container..."
+                echo "Creating PROD Docker container..."
 
                 sh '''
                     docker rm -f c1 2>/dev/null || true
-                    docker run -d --name c1 -p 80:80 qa-apache:latest
+                    docker run -d --name c1 -p 80:80 prod-apache:latest
                 '''
             }
         }
@@ -52,12 +52,11 @@ pipeline {
 
     post {
         success {
-            echo "QA Pipeline completed successfully"
+            echo "PROD Pipeline completed successfully"
         }
 
         failure {
-            echo "QA Pipeline failed"
+            echo "PROD Pipeline failed"
         }
     }
 }
-
